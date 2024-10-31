@@ -4,9 +4,9 @@ public class Personajes {
 
 	String nombre;
 	String tipo;
-	String juego;
+	int juego;
 	
-	public Personajes(String nombre, String tipo, String juego) {
+	public Personajes(String nombre, String tipo, int juego) {
 		super();
 		this.nombre = nombre;
 		this.tipo = tipo;
@@ -33,12 +33,19 @@ public class Personajes {
 		this.tipo = tipo;
 	}
 
-	public String getJuego() {
+	public int getJuego() {
 		return juego;
 	}
 
-	public void setJuego(String juego) {
+	public void setJuego(int juego) {
 		this.juego = juego;
 	}
+
+	@Override
+	public String toString() {
+		return "Personajes [nombre=" + nombre + ", tipo=" + tipo + ", juego=" + juego + "]";
+	}
+	
+	
 
 }

@@ -4,10 +4,10 @@ import modelo.Personajes;
 
 public interface PersonajesDAO {
 
-	public boolean insertar(Personajes dep);
-    public boolean eliminar(Personajes dep); 
-    public boolean modificar(Personajes dep);
-    public Personajes consultar(Personajes dep);   
+	public boolean insertar(Personajes p);
+    public boolean eliminar(Personajes p); 
+    public boolean modificar(Personajes p);
+    public Personajes consultar(Personajes p);   
     public void finalize();
 
 
