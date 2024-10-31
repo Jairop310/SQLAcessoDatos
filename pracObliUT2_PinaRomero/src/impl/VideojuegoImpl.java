@@ -56,7 +56,6 @@ public class VideojuegoImpl implements VideojuegoDAO {
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
-                System.out.printf("Videojuego Eliminado");
             }
             sentencia.close();
         } catch (SQLException e) {
@@ -101,9 +100,7 @@ public class VideojuegoImpl implements VideojuegoDAO {
                 VideogameDevuelto.setGenero(rs.getString("genero"));
                 VideogameDevuelto.setYear(rs.getInt("year"));
             }
-            else
-                System.out.printf("Videojuego no existe");
-            
+          
             rs.close();
             sentencia.close();
          

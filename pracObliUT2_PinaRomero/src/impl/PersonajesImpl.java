@@ -37,8 +37,6 @@ private Connection conexion ;
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
-                 System.out.printf("Personaje %s insertado%n", p.getNombre());
-
             }
             sentencia.close();
 
@@ -61,7 +59,6 @@ private Connection conexion ;
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
-                System.out.printf("Personaje %s eliminado%n", p.getNombre());
             }
             sentencia.close();
         } catch (SQLException e) {
@@ -85,7 +82,6 @@ private Connection conexion ;
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
-                System.out.printf("Personaje %s modificado%n", p.getNombre());
             }
             sentencia.close();
         } catch (SQLException e) {
@@ -110,8 +106,6 @@ private Connection conexion ;
             	personaje_devuelto.setTipo(rs.getString("tipo"));
             	personaje_devuelto.setJuego(rs.getInt("videojuego_id"));
             }
-            else
-                System.out.printf("Personajes no existe");
             
             rs.close();
             sentencia.close();
