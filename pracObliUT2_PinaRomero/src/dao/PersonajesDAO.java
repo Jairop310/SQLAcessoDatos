@@ -1,10 +1,14 @@
 package dao;
 
-public class PersonajesDAO {
+import modelo.Personajes;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+public interface PersonajesDAO {
 
-	}
+	public boolean insertar(Personajes dep);
+    public boolean eliminar(Personajes dep); 
+    public boolean modificar(Personajes dep);
+    public Personajes consultar(Personajes dep);   
+    public void finalize();
+
 
 }

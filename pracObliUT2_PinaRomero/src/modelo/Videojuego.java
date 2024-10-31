@@ -19,6 +19,12 @@ public class Videojuego {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return "Videojuego [name=" + name + ", year=" + year + ", genero=" + genero + ", listP=" + listP + "]";
+	}
+
+
 	public Videojuego() {
 		super();
 	}

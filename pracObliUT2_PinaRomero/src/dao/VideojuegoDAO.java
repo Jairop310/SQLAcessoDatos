@@ -1,10 +1,13 @@
 package dao;
 
-public class VideojuegoDAO {
+import modelo.Videojuego;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+public interface VideojuegoDAO {
 
-	}
+	public boolean insertar(Videojuego dep);
+    public boolean eliminar(Videojuego dep); 
+    public boolean modificar(Videojuego dep);
+    public Videojuego consultar(String name);   
+    public void finalize();
 
 }
