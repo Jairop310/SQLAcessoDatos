@@ -22,27 +22,79 @@ public class VideojuegoImpl implements VideojuegoDAO {
     }
 
 
-	public boolean insertar(Videojuego dep) {
-		
-		return false;
+	public boolean insertar(Videojuego videojuegoNuevo) {
+		 boolean valor = false;
+	        String sql = "INSERT INTO VIDEOJUEGOS (NAME,YEAR,GENERO) VALUES(?, ?, ?)";
+	        PreparedStatement sentencia;
+	        try {
+	            sentencia = conexion.prepareStatement(sql);
+	            sentencia.setString(1, videojuegoNuevo.getName());
+	            sentencia.setInt(2, videojuegoNuevo.getYear());
+	            sentencia.setString(3, videojuegoNuevo.getGenero());
+	            int filas = sentencia.executeUpdate();
+	            if (filas > 0) {
+	                valor = true;
+	                 System.out.printf("Videojuego " + videojuegoNuevo.getName() + " insertado%n");
+	            }
+	            sentencia.close();
+
+	        } catch (SQLException e) {
+	            mensajeExcepcion(e);      
+	        }
+	        return valor;
 		
 	}
-    public boolean eliminar(Videojuego dep) {
-		return false;
+	
+    public boolean eliminar(Videojuego videojuegoEiminar) {
     	
+    	boolean valor = false;
+        String sql = "DELETE FROM VIDEOJUEGOS WHERE NAME = ? ";
+        PreparedStatement sentencia;
+        try {
+            sentencia = conexion.prepareStatement(sql);
+            sentencia.setString(1, videojuegoEiminar.getName());
+            int filas = sentencia.executeUpdate();
+            if (filas > 0) {
+                valor = true;
+                System.out.printf("Videojuego Eliminado");
+            }
+            sentencia.close();
+        } catch (SQLException e) {
+            mensajeExcepcion(e);      
+        }
+        return valor;
     }
+    
     public boolean modificar(Videojuego dep) {
-		return false;
     	
+    	boolean valor = false;
+        String sql = "UPDATE VIDEOJUEGOS SET YEAR = ? , GENERO = ? WHERE NAME = ? ";
+        PreparedStatement sentencia;
+        try {
+            sentencia = conexion.prepareStatement(sql);
+            sentencia.setInt(1, dep.getYear());
+            sentencia.setString(2, dep.getGenero());
+            sentencia.setString(3, dep.getName());
+            int filas = sentencia.executeUpdate();
+            if (filas > 0) {
+                valor = true;
+                System.out.printf("Videojuego Modificado");
+            }
+            sentencia.close();
+        } catch (SQLException e) {
+            mensajeExcepcion(e);      
+        }
+        return valor;
     }
-    public Videojuego consultar(String name) {
-    	
+    
+    public Videojuego consultar(Videojuego videojuegoConsultar) {
+    	System.out.println(videojuegoConsultar.getName());
     	String sql = "SELECT name, year, genero FROM videojuegos WHERE name =  ?";
         PreparedStatement sentencia;
         Videojuego VideogameDevuelto = new Videojuego();        
         try {
             sentencia = conexion.prepareStatement(sql);
-            sentencia.setString(1, name);
+            sentencia.setString(1, videojuegoConsultar.getName());
             ResultSet rs = sentencia.executeQuery();          
             if (rs.next()) {
                 VideogameDevuelto.setName(rs.getString("name"));
@@ -62,7 +114,7 @@ public class VideojuegoImpl implements VideojuegoDAO {
     	
     }
     public void finalize() {
-    	
+    	DB.deleteConnection();
     };
 
     private void mensajeExcepcion(SQLException e) {
