@@ -1,8 +1,6 @@
 package controlador;
 
-import java.sql.Connection;
 import java.util.Scanner;
-
 import dao.PersonajesDAO;
 import dao.VideojuegoDAO;
 import impl.PersonajesImpl;
@@ -80,11 +78,17 @@ public class Principal {
 	private static void updatePersonaje() {
 		System.out.println("Introduce el nombre del personaje");
 		String nombre = teclado.nextLine();
-		System.out.println("Introduce el nombre del videojuego");//Modificar para que pida el nombre
+		System.out.println("Introduce el nombre del videojuego");
 		String id = teclado.nextLine();
 		System.out.println("Introduce el tipo del videojuego");
 		String tipo = teclado.nextLine();
 		
+		char confrimacion;
+		System.out.println("¿Estas seguro de que quieres modificar el personaje?(s/n)");
+		confrimacion = teclado.nextLine().charAt(0);
+		
+		if (confrimacion == 'n') {return;}
+				
 		Personajes p = new Personajes(nombre,tipo,id);
 		if (pdao.modificar(p)) {System.out.println("Personaje modificado");}
 		else {System.out.println("No se ha podido modificar el personaje");}
@@ -104,7 +108,7 @@ public class Principal {
 
 		System.out.println("Introduce el nombre del personaje");
 		String nombre = teclado.nextLine();
-		System.out.println("Introduce el nombre del videojuego");//Modificar para que pida el nombre
+		System.out.println("Introduce el nombre del videojuego");
 		String id = teclado.nextLine();
 		System.out.println("Introduce el tipo del videojuego");
 		String tipo = teclado.nextLine();
@@ -132,6 +136,12 @@ public class Principal {
 		int year = Integer.parseInt(teclado.nextLine());
 		System.out.println("Introduce el genero del videojuego");
 		String genero = teclado.nextLine();
+		
+		char confrimacion;
+		System.out.println("¿Estas seguro de que quieres modificar el personaje?(s/n)");
+		confrimacion = teclado.nextLine().charAt(0);
+		
+		if (confrimacion == 'n') {return;}
 		
 		Videojuego v = new Videojuego(nombre,year,genero);
 		
