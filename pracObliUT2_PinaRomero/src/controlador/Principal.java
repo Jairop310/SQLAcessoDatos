@@ -80,8 +80,8 @@ public class Principal {
 	private static void updatePersonaje() {
 		System.out.println("Introduce el nombre del personaje");
 		String nombre = teclado.nextLine();
-		System.out.println("Introduce el id del videojuego");//Modificar para que pida el nombre
-		int id = Integer.parseInt(teclado.nextLine());
+		System.out.println("Introduce el nombre del videojuego");//Modificar para que pida el nombre
+		String id = teclado.nextLine();
 		System.out.println("Introduce el tipo del videojuego");
 		String tipo = teclado.nextLine();
 		
@@ -104,8 +104,8 @@ public class Principal {
 
 		System.out.println("Introduce el nombre del personaje");
 		String nombre = teclado.nextLine();
-		System.out.println("Introduce el id del videojuego");//Modificar para que pida el nombre
-		int id = Integer.parseInt(teclado.nextLine());
+		System.out.println("Introduce el nombre del videojuego");//Modificar para que pida el nombre
+		String id = teclado.nextLine();
 		System.out.println("Introduce el tipo del videojuego");
 		String tipo = teclado.nextLine();
 		

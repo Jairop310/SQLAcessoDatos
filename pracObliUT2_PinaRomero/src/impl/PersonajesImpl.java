@@ -26,14 +26,14 @@ private Connection conexion ;
 	public boolean insertar(Personajes p) {
 
 		boolean valor = false;
-        String sql = "INSERT INTO personajes (name, tipo, videojuego_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO personajes (name, tipo, videojuego_name) VALUES (?, ?, ?)";
 
         PreparedStatement sentencia;
         try {
             sentencia = conexion.prepareStatement(sql);
             sentencia.setString(1, p.getNombre());
             sentencia.setString(2, p.getTipo());
-            sentencia.setInt(3, p.getJuego());
+            sentencia.setString(3, p.getJuego());
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
@@ -72,13 +72,13 @@ private Connection conexion ;
 	public boolean modificar(Personajes p) {
 
 		boolean valor = false;
-        String sql = "UPDATE personajes SET tipo= ?, videojuego_id = ? WHERE name = ? ";
+        String sql = "UPDATE personajes SET tipo= ?, videojuego_name = ? WHERE name = ? ";
         PreparedStatement sentencia;
         try {
             sentencia = conexion.prepareStatement(sql);
             sentencia.setString(3, p.getNombre());
             sentencia.setString(1, p.getTipo());
-            sentencia.setInt(2, p.getJuego());
+            sentencia.setString(2, p.getJuego());
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
@@ -94,7 +94,7 @@ private Connection conexion ;
 	@Override
 	public Personajes consultar(Personajes p) {
 
-		String sql = "SELECT name, tipo, videojuego_id FROM personajes WHERE name =  ?";
+		String sql = "SELECT name, tipo, videojuego_name FROM personajes WHERE name =  ?";
         PreparedStatement sentencia;
         Personajes personaje_devuelto = new Personajes();        
         try {
@@ -104,7 +104,7 @@ private Connection conexion ;
             if (rs.next()) {
             	personaje_devuelto.setNombre(rs.getString("name"));
             	personaje_devuelto.setTipo(rs.getString("tipo"));
-            	personaje_devuelto.setJuego(rs.getInt("videojuego_id"));
+            	personaje_devuelto.setJuego(rs.getString("videojuego_name"));
             }
             
             rs.close();
