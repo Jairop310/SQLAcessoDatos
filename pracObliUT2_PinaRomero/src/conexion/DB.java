@@ -1,11 +1,16 @@
 package conexion;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.properties.EncryptableProperties;
+import org.jasypt.properties.PropertyValueEncryptionUtils;
 
 public class DB {
 
@@ -16,19 +21,25 @@ public class DB {
     private static String CLAVE;
 
     private static void loadProperties() {
-        Properties properties = new Properties();
-        try (FileInputStream input = new FileInputStream("db.properties")) {
+        Properties properties = desincriptacion();
+        try (FileInputStream input = new FileInputStream("generado.properties")) {
             properties.load(input);
-            DRIVER = properties.getProperty("DRIVER");
-            URLDB = properties.getProperty("URLDB");
-            USUARIO = properties.getProperty("USUARIO");
-            CLAVE = properties.getProperty("CLAVE");
+            DRIVER = properties.getProperty("jdbc.protocolo");
+            URLDB = properties.getProperty("jdbc.basedatos");
+            USUARIO = properties.getProperty("jdbc.username");
+            CLAVE = properties.getProperty("jdbc.password");
             Class.forName(DRIVER);
         } catch (IOException ex) {
             System.out.println("Error al cargar el archivo db.properties: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
             System.out.println("Error al cargar el driver JDBC: " + ex.getMessage());
         }
+    }
+    private static Properties desincriptacion() {
+    	StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+		encryptor.setPassword("PASSWORD");
+		Properties props = new EncryptableProperties(encryptor);
+		return props;
     }
 
     public static void createConnection() {
