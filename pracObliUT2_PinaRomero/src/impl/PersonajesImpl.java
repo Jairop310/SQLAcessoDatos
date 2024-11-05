@@ -1,5 +1,6 @@
 	package impl;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ public class PersonajesImpl implements PersonajesDAO {
 	public boolean insertar(Personajes p) {
 
 		boolean valor = false;
-        String sql = "INSERT INTO personajes (name, tipo, videojuego_name,precio_unitario) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO personajes (name, tipo, videojuego_name,precio_unitario) VALUES (?, ?, ?,?)";
 
 
         try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
@@ -48,9 +49,15 @@ public class PersonajesImpl implements PersonajesDAO {
 
 		boolean valor = false;
         String sql = "DELETE FROM personajes WHERE name = ? ";
-
-        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
+        try(Connection conexion = DB.getConnection();
+        		PreparedStatement  sentencia = conexion.prepareStatement(sql);
+        		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);) {
             sentencia.setString(1, p.getNombre());
+            
+            llamada.setString(1, p.getNombre());
+            llamada.executeUpdate();
+            
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
                 valor = true;
@@ -68,14 +75,21 @@ public class PersonajesImpl implements PersonajesDAO {
 
 		boolean valor = false;
         String sql = "UPDATE personajes SET tipo= ?, videojuego_name = ?,precio_unitario = ? WHERE name = ? ";
+        String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
+        try(Connection conexion = DB.getConnection();
+        		PreparedStatement  sentencia = conexion.prepareStatement(sql);
+        		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);
+        		) {
 
-        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
-
-            sentencia.setString(3, p.getNombre());
+            
             sentencia.setString(1, p.getTipo());
             sentencia.setString(2, p.getJuego());
-            sentencia.setInt(4, p.getPrecio());
-            int filas = sentencia.executeUpdate();//EJECUCION METODO SQL
+            sentencia.setInt(3, p.getPrecio());
+            sentencia.setString(4, p.getNombre());
+            int filas = sentencia.executeUpdate();
+            
+            llamada.setString(1, p.getNombre());
+            llamada.executeUpdate();
             if (filas > 0) {
                 valor = true;
             }

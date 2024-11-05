@@ -6,14 +6,14 @@ BEGIN
 
     SELECT precio_unitario INTO precio_videojuego
     FROM videojuegos
-    WHERE name = videojuego_nombre;
+    WHERE videojuegos.name = videojuego_nombre;
 
     SELECT SUM(precio_unitario) INTO precio_personajes
     FROM personajes
-    WHERE videojuego_name = videojuego_nombre;
+    WHERE personajes.videojuego_name = videojuego_nombre;
 
     UPDATE videojuegos
     SET precio_total = precio_videojuego + precio_personajes
-    WHERE name = videojuego_nombre;
+    WHERE videojuegos.name = videojuego_nombre;
 END //
 DELIMITER ;

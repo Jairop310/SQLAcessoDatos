@@ -1,5 +1,6 @@
 package impl;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,13 +66,21 @@ public class VideojuegoImpl implements VideojuegoDAO {
     	
     	boolean valor = false;
         String sql = "UPDATE VIDEOJUEGOS SET YEAR = ? , GENERO = ?,precio_unitario = ?, precio_total = ? WHERE NAME = ? ";
-        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
+        try(Connection conexion = DB.getConnection();
+        		PreparedStatement  sentencia = conexion.prepareStatement(sql);
+        		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);) {
             sentencia.setInt(1, dep.getYear());
             sentencia.setString(2, dep.getGenero());
-            sentencia.setString(3, dep.getName());
-            sentencia.setInt(4, dep.getPrecioUnitario());
-            sentencia.setInt(5, dep.getPrecioTotal());
-            int filas = sentencia.executeUpdate();	//AQUI ABRIA QUE EJECUTAR EL PROCEDIMIENTO SQL
+            sentencia.setString(5, dep.getName());
+            sentencia.setInt(3, dep.getPrecioUnitario());
+            sentencia.setInt(4, dep.getPrecioTotal());
+            int filas = sentencia.executeUpdate();	
+            
+            
+            llamada.setString(1, dep.getName());
+            llamada.executeUpdate();
+
             if (filas > 0) {
                 valor = true;
                 System.out.printf("Videojuego Modificado");
