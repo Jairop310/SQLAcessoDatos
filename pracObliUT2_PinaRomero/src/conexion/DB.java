@@ -12,15 +12,32 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.properties.EncryptableProperties;
 import org.jasypt.properties.PropertyValueEncryptionUtils;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
+
 public class DB {
 
     private static Connection conexion = null;
+    private static MysqlDataSource dataSource;
     private static String DRIVER;
     private static String URLDB;
     private static String USUARIO;
     private static String CLAVE;
+    
+    private static DB baseDatos;
+    
+    
+    public DB() {
+		loadProperties();
+	}
 
-    private static void loadProperties() {
+	public static DB getInstancia() {
+		if (baseDatos == null) {
+			baseDatos = new DB();
+		}
+		return baseDatos;
+	}
+	
+	private void loadProperties() {
         Properties properties = desincriptacion();
         try (FileInputStream input = new FileInputStream("generado.properties")) {
             properties.load(input);
@@ -28,24 +45,26 @@ public class DB {
             URLDB = properties.getProperty("jdbc.basedatos");
             USUARIO = properties.getProperty("jdbc.username");
             CLAVE = properties.getProperty("jdbc.password");
-            Class.forName(DRIVER);
+            
         } catch (IOException ex) {
             System.out.println("Error al cargar el archivo db.properties: " + ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error al cargar el driver JDBC: " + ex.getMessage());
-        }
+        } 
     }
-    private static Properties desincriptacion() {
+    private  Properties desincriptacion() {
     	StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
 		encryptor.setPassword("PASSWORD");
 		Properties props = new EncryptableProperties(encryptor);
 		return props;
     }
 
-    public static void createConnection() {
-        loadProperties();
+    public  void createConnection() {
+        //loadProperties();
         try {
-            conexion = DriverManager.getConnection(URLDB, USUARIO, CLAVE);
+            dataSource = new MysqlDataSource();
+            dataSource.setURL(URLDB); 
+            dataSource.setUser(USUARIO);
+            dataSource.setPassword(CLAVE);
+        	conexion = dataSource.getConnection();
             if (conexion != null) {
                 System.out.println("Conexión exitosa");
             }
@@ -57,14 +76,14 @@ public class DB {
         }
     }
 
-    public static Connection getConnection() {
+    public  Connection getConnection() {
     	if (conexion == null) {
             createConnection();
     	}
         return conexion;
     }
 
-    public static void deleteConnection() {
+    public  void deleteConnection() {
         try {
             if (conexion != null && !conexion.isClosed()) {
                 conexion.close();

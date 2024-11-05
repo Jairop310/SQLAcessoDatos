@@ -25,8 +25,9 @@ public class PersonajesImpl implements PersonajesDAO {
 		boolean valor = false;
         String sql = "INSERT INTO personajes (name, tipo, videojuego_name,precio_unitario) VALUES (?, ?, ?,?)";
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
-
-        try(Connection conexion = DB.getConnection();
+        DB basedatos = DB.getInstancia();
+        
+        try(Connection conexion = basedatos.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);
         		) {
@@ -57,7 +58,8 @@ public class PersonajesImpl implements PersonajesDAO {
 		boolean valor = false;
         String sql = "DELETE FROM personajes WHERE name = ? ";
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
-        try(Connection conexion = DB.getConnection();
+        DB basedatos = DB.getInstancia();
+        try(Connection conexion = basedatos.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);) {
             sentencia.setString(1, p.getNombre());
@@ -83,7 +85,8 @@ public class PersonajesImpl implements PersonajesDAO {
 		boolean valor = false;
         String sql = "UPDATE personajes SET tipo= ?, videojuego_name = ?,precio_unitario = ? WHERE name = ? ";
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
-        try(Connection conexion = DB.getConnection();
+        DB basedatos = DB.getInstancia();
+        try(Connection conexion = basedatos.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);
         		) {
@@ -113,8 +116,9 @@ public class PersonajesImpl implements PersonajesDAO {
 
 		String sql = "SELECT * FROM personajes WHERE name =  ?";
         
-        Personajes personaje_devuelto = new Personajes();        
-        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        Personajes personaje_devuelto = new Personajes();      
+        DB basedatos = DB.getInstancia();
+        try(Connection conexion = basedatos.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, p.getNombre());
             ResultSet rs = sentencia.executeQuery();          
             if (rs.next()) {

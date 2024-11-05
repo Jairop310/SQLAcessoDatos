@@ -17,3 +17,5 @@ BEGIN
     WHERE videojuegos.name = videojuego_nombre;
 END //
 DELIMITER ;
+
+DROP PROCEDURE actualizar_valoracion_total;
