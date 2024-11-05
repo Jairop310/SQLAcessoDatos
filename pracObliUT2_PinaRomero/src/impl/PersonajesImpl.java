@@ -24,14 +24,21 @@ public class PersonajesImpl implements PersonajesDAO {
 
 		boolean valor = false;
         String sql = "INSERT INTO personajes (name, tipo, videojuego_name,precio_unitario) VALUES (?, ?, ?,?)";
+        String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
 
-
-        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        try(Connection conexion = DB.getConnection();
+        		PreparedStatement  sentencia = conexion.prepareStatement(sql);
+        		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);
+        		) {
             sentencia.setString(1, p.getNombre());
             sentencia.setString(2, p.getTipo());
             sentencia.setString(3, p.getJuego());
             sentencia.setInt(4, p.getPrecio());
-            int filas = sentencia.executeUpdate();//EJECUCION METODO SQL
+            int filas = sentencia.executeUpdate();
+            
+            llamada.setString(1, p.getNombre());
+            llamada.executeUpdate();
+            
             if (filas > 0) {
                 valor = true;
             }
