@@ -11,26 +11,24 @@ import modelo.Videojuego;
 
 public class VideojuegoImpl implements VideojuegoDAO {
 
-	private Connection conexion ;
+	
 	
 	public VideojuegoImpl() {
-        this.conexion = DB.getConnection();
-        if (conexion == null) {
-            DB.createConnection();
-            this.conexion = DB.getConnection();
-        }
+        
     }
 
 
 	public boolean insertar(Videojuego videojuegoNuevo) {
 		 boolean valor = false;
-	        String sql = "INSERT INTO VIDEOJUEGOS (NAME,YEAR,GENERO) VALUES(?, ?, ?)";
-	        PreparedStatement sentencia;
-	        try {
-	            sentencia = conexion.prepareStatement(sql);
+	        String sql = "INSERT INTO VIDEOJUEGOS (NAME,YEAR,GENERO,precio_unitario,precio_total) VALUES(?, ?, ?, ?, ?)";
+	        
+	        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+	        	
 	            sentencia.setString(1, videojuegoNuevo.getName());
 	            sentencia.setInt(2, videojuegoNuevo.getYear());
 	            sentencia.setString(3, videojuegoNuevo.getGenero());
+	            sentencia.setInt(4, videojuegoNuevo.getPrecioUnitario());
+	            sentencia.setInt(5, videojuegoNuevo.getPrecioUnitario());
 	            int filas = sentencia.executeUpdate();
 	            if (filas > 0) {
 	                valor = true;
@@ -49,9 +47,8 @@ public class VideojuegoImpl implements VideojuegoDAO {
     	
     	boolean valor = false;
         String sql = "DELETE FROM VIDEOJUEGOS WHERE NAME = ? ";
-        PreparedStatement sentencia;
-        try {
-            sentencia = conexion.prepareStatement(sql);
+
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, videojuegoEiminar.getName());
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
@@ -67,14 +64,14 @@ public class VideojuegoImpl implements VideojuegoDAO {
     public boolean modificar(Videojuego dep) {
     	
     	boolean valor = false;
-        String sql = "UPDATE VIDEOJUEGOS SET YEAR = ? , GENERO = ? WHERE NAME = ? ";
-        PreparedStatement sentencia;
-        try {
-            sentencia = conexion.prepareStatement(sql);
+        String sql = "UPDATE VIDEOJUEGOS SET YEAR = ? , GENERO = ?,precio_unitario = ?, precio_total = ? WHERE NAME = ? ";
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setInt(1, dep.getYear());
             sentencia.setString(2, dep.getGenero());
             sentencia.setString(3, dep.getName());
-            int filas = sentencia.executeUpdate();
+            sentencia.setInt(4, dep.getPrecioUnitario());
+            sentencia.setInt(5, dep.getPrecioTotal());
+            int filas = sentencia.executeUpdate();	//AQUI ABRIA QUE EJECUTAR EL PROCEDIMIENTO SQL
             if (filas > 0) {
                 valor = true;
                 System.out.printf("Videojuego Modificado");
@@ -88,21 +85,21 @@ public class VideojuegoImpl implements VideojuegoDAO {
     
     public Videojuego consultar(Videojuego videojuegoConsultar) {
     	System.out.println(videojuegoConsultar.getName());
-    	String sql = "SELECT name, year, genero FROM videojuegos WHERE name =  ?";
-        PreparedStatement sentencia;
+    	String sql = "SELECT * FROM videojuegos WHERE name =  ?";
+
         Videojuego VideogameDevuelto = new Videojuego();        
-        try {
-            sentencia = conexion.prepareStatement(sql);
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, videojuegoConsultar.getName());
             ResultSet rs = sentencia.executeQuery();          
             if (rs.next()) {
                 VideogameDevuelto.setName(rs.getString("name"));
                 VideogameDevuelto.setGenero(rs.getString("genero"));
                 VideogameDevuelto.setYear(rs.getInt("year"));
+                VideogameDevuelto.setPrecioUnitario(rs.getInt("precio_unitario"));
+                VideogameDevuelto.setPrecioTotal(rs.getInt("precio_total"));
             }
           
             rs.close();
-            sentencia.close();
          
         } catch (SQLException e) {
             mensajeExcepcion(e);            
@@ -110,9 +107,6 @@ public class VideojuegoImpl implements VideojuegoDAO {
         return VideogameDevuelto;
     	
     }
-    public void finalize() {
-    	DB.deleteConnection();
-    };
 
     private void mensajeExcepcion(SQLException e) {
 	       System.out.printf("HA OCURRIDO UNA EXCEPCIÓN:%n");

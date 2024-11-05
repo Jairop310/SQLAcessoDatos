@@ -58,6 +58,9 @@ public class DB {
     }
 
     public static Connection getConnection() {
+    	if (conexion == null) {
+            createConnection();
+    	}
         return conexion;
     }
 

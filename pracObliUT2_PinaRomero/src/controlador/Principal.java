@@ -59,8 +59,6 @@ public class Principal {
 			
 		}
 		while (letra != 't');
-		pdao.finalize();
-		videojuegoDAO.finalize();
 		teclado.close();
 	}
 	private static void selectPersonaje() {
@@ -82,6 +80,8 @@ public class Principal {
 		String id = teclado.nextLine();
 		System.out.println("Introduce el tipo del videojuego");
 		String tipo = teclado.nextLine();
+		System.out.println("Introduce el precio del videojuego");
+		int precio = Integer.parseInt(teclado.nextLine());
 		
 		char confrimacion;
 		System.out.println("¿Estas seguro de que quieres modificar el personaje?(s/n)");
@@ -89,7 +89,7 @@ public class Principal {
 		
 		if (confrimacion == 'n') {return;}
 				
-		Personajes p = new Personajes(nombre,tipo,id);
+		Personajes p = new Personajes(nombre,tipo,id,precio);
 		if (pdao.modificar(p)) {System.out.println("Personaje modificado");}
 		else {System.out.println("No se ha podido modificar el personaje");}
 	}
@@ -112,12 +112,16 @@ public class Principal {
 		String id = teclado.nextLine();
 		System.out.println("Introduce el tipo del videojuego");
 		String tipo = teclado.nextLine();
+		System.out.println("Introduce el precio del videojuego");
+		int precio = Integer.parseInt(teclado.nextLine());
 		
-		Personajes p = new Personajes(nombre,tipo,id);
+		Personajes p = new Personajes(nombre,tipo,id,precio);
 		if (pdao.insertar(p)) {System.out.println("Personaje insertado");}
 		else {System.out.println("No se ha podido insertar el personaje");}
 		
 	}
+	
+	
 	private static void selectVideojuego() {
 		System.out.println("Introduce el nombre del videojuego");
 		String nombre = teclado.nextLine();
@@ -136,6 +140,11 @@ public class Principal {
 		int year = Integer.parseInt(teclado.nextLine());
 		System.out.println("Introduce el genero del videojuego");
 		String genero = teclado.nextLine();
+		System.out.println("Introduce el precio unitario del videojuego");
+		int precioUnitario = Integer.parseInt(teclado.nextLine());
+		
+		System.out.println("Introduce el precio total del videojuego");//REVISAR
+		int precioTotal = Integer.parseInt(teclado.nextLine());
 		
 		char confrimacion;
 		System.out.println("¿Estas seguro de que quieres modificar el personaje?(s/n)");
@@ -143,7 +152,7 @@ public class Principal {
 		
 		if (confrimacion == 'n') {return;}
 		
-		Videojuego v = new Videojuego(nombre,year,genero);
+		Videojuego v = new Videojuego(nombre,year,genero,precioUnitario,precioTotal);
 		
 		if (videojuegoDAO.modificar(v)) {System.out.println("Videojuego modificado");} 
 		else {System.out.println("No se ha podido modificar el videojuego");}
@@ -166,8 +175,14 @@ public class Principal {
 		int year = Integer.parseInt(teclado.nextLine());
 		System.out.println("Introduce el genero del videojuego");
 		String genero = teclado.nextLine();
+		System.out.println("Introduce el precio unitario del videojuego");
+		int precioUnitario = Integer.parseInt(teclado.nextLine());
 		
-		Videojuego v = new Videojuego(nombre,year,genero);
+		System.out.println("Introduce el precio total del videojuego"); //REVISAR
+		int precioTotal = Integer.parseInt(teclado.nextLine());
+		
+		
+		Videojuego v = new Videojuego(nombre,year,genero,precioUnitario,precioTotal);
 		
 		if (videojuegoDAO.insertar(v)) {System.out.println("Videojuego insertado");} 
 		else {System.out.println("No se ha podido insertar el videojuego");}

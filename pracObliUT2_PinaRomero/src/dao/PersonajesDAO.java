@@ -8,7 +8,6 @@ public interface PersonajesDAO {
     public boolean eliminar(Personajes p); 
     public boolean modificar(Personajes p);
     public Personajes consultar(Personajes p);   
-    public void finalize();
 
 
 }

@@ -1,4 +1,4 @@
-package impl;
+	package impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,29 +12,25 @@ import modelo.Videojuego;
 
 public class PersonajesImpl implements PersonajesDAO {
 	
-private Connection conexion ;
+
 	
 	public PersonajesImpl() {
-        this.conexion = DB.getConnection();
-        if (conexion == null) {
-            DB.createConnection();
-            this.conexion = DB.getConnection();
-        }
+
     }
 	
 	@Override
 	public boolean insertar(Personajes p) {
 
 		boolean valor = false;
-        String sql = "INSERT INTO personajes (name, tipo, videojuego_name) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO personajes (name, tipo, videojuego_name,precio_unitario) VALUES (?, ?, ?)";
 
-        PreparedStatement sentencia;
-        try {
-            sentencia = conexion.prepareStatement(sql);
+
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, p.getNombre());
             sentencia.setString(2, p.getTipo());
             sentencia.setString(3, p.getJuego());
-            int filas = sentencia.executeUpdate();
+            sentencia.setInt(4, p.getPrecio());
+            int filas = sentencia.executeUpdate();//EJECUCION METODO SQL
             if (filas > 0) {
                 valor = true;
             }
@@ -52,9 +48,8 @@ private Connection conexion ;
 
 		boolean valor = false;
         String sql = "DELETE FROM personajes WHERE name = ? ";
-        PreparedStatement sentencia;
-        try {
-            sentencia = conexion.prepareStatement(sql);
+
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, p.getNombre());
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
@@ -72,14 +67,15 @@ private Connection conexion ;
 	public boolean modificar(Personajes p) {
 
 		boolean valor = false;
-        String sql = "UPDATE personajes SET tipo= ?, videojuego_name = ? WHERE name = ? ";
-        PreparedStatement sentencia;
-        try {
-            sentencia = conexion.prepareStatement(sql);
+        String sql = "UPDATE personajes SET tipo= ?, videojuego_name = ?,precio_unitario = ? WHERE name = ? ";
+
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+
             sentencia.setString(3, p.getNombre());
             sentencia.setString(1, p.getTipo());
             sentencia.setString(2, p.getJuego());
-            int filas = sentencia.executeUpdate();
+            sentencia.setInt(4, p.getPrecio());
+            int filas = sentencia.executeUpdate();//EJECUCION METODO SQL
             if (filas > 0) {
                 valor = true;
             }
@@ -94,17 +90,17 @@ private Connection conexion ;
 	@Override
 	public Personajes consultar(Personajes p) {
 
-		String sql = "SELECT name, tipo, videojuego_name FROM personajes WHERE name =  ?";
-        PreparedStatement sentencia;
+		String sql = "SELECT * FROM personajes WHERE name =  ?";
+        
         Personajes personaje_devuelto = new Personajes();        
-        try {
-            sentencia = conexion.prepareStatement(sql);
+        try(Connection conexion = DB.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, p.getNombre());
             ResultSet rs = sentencia.executeQuery();          
             if (rs.next()) {
             	personaje_devuelto.setNombre(rs.getString("name"));
             	personaje_devuelto.setTipo(rs.getString("tipo"));
             	personaje_devuelto.setJuego(rs.getString("videojuego_name"));
+            	personaje_devuelto.setPrecio(rs.getInt("precio_unitario"));
             }
             
             rs.close();
@@ -113,16 +109,9 @@ private Connection conexion ;
         } catch (SQLException e) {
             mensajeExcepcion(e);            
         }
-        return personaje_devuelto;
-		
+        return personaje_devuelto;	
 	}
 	
-		public void finalize() {
-			
-			DB.deleteConnection();
-    	
-		};
-
     private void mensajeExcepcion(SQLException e) {
 	       System.out.printf("HA OCURRIDO UNA EXCEPCIÓN:%n");
 	       System.out.printf("Mensaje   : %s %n", e.getMessage());

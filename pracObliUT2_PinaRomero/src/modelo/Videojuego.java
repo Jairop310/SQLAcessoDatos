@@ -8,20 +8,49 @@ public class Videojuego {
 	int year;
 	String genero;
 	ArrayList<Personajes> listP;
+	int precioUnitario;
+	int precioTotal;
 		
 	
-	public Videojuego(String nomber, int year, String genero) {
+	public Videojuego(String nomber, int year, String genero,int precioUnitario, int precioTotal) {
 		super();
 		this.name = nomber;
 		this.year = year;
 		this.genero = genero;
+		this.precioUnitario = precioUnitario;
+		this.precioTotal = precioTotal;
 		this.listP = new ArrayList<Personajes>();	
 	}
 	
 	
+
+
 	@Override
 	public String toString() {
-		return "Videojuego [name=" + name + ", year=" + year + ", genero=" + genero + ", listP=" + listP + "]";
+		return "Videojuego [name=" + name + ", year=" + year + ", genero=" + genero + ", listP=" + listP
+				+ ", precioUnitario=" + precioUnitario + ", precioTotal=" + precioTotal + "]";
+	}
+
+
+
+
+	public int getPrecioUnitario() {
+		return precioUnitario;
+	}
+
+
+	public void setPrecioUnitario(int precioUnitario) {
+		this.precioUnitario = precioUnitario;
+	}
+
+
+	public int getPrecioTotal() {
+		return precioTotal;
+	}
+
+
+	public void setPrecioTotal(int precioTotal) {
+		this.precioTotal = precioTotal;
 	}
 
 
