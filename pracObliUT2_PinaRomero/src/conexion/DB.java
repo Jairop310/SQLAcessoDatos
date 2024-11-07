@@ -16,7 +16,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 
 public class DB {
 
-    private static Connection conexion = null;
+    private static Connection conexion;// = null;
     private static MysqlDataSource dataSource;
     private static String DRIVER;
     private static String URLDB;
@@ -45,6 +45,10 @@ public class DB {
             URLDB = properties.getProperty("jdbc.basedatos");
             USUARIO = properties.getProperty("jdbc.username");
             CLAVE = properties.getProperty("jdbc.password");
+            dataSource = new MysqlDataSource();
+            dataSource.setURL(URLDB); 
+            dataSource.setUser(USUARIO);
+            dataSource.setPassword(CLAVE);
             
         } catch (IOException ex) {
             System.out.println("Error al cargar el archivo db.properties: " + ex.getMessage());
@@ -77,10 +81,16 @@ public class DB {
     }
 
     public  Connection getConnection() {
-    	if (conexion == null) {
+    	/*if (conexion == null) {
             createConnection();
-    	}
-        return conexion;
+    	}*/
+        try {
+			return dataSource.getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
     }
 
     public  void deleteConnection() {

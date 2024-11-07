@@ -13,10 +13,10 @@ import modelo.Videojuego;
 
 public class PersonajesImpl implements PersonajesDAO {
 	
-
+	DB db;
 	
 	public PersonajesImpl() {
-
+		db = DB.getInstancia();
     }
 	
 	@Override
@@ -25,9 +25,9 @@ public class PersonajesImpl implements PersonajesDAO {
 		boolean valor = false;
         String sql = "INSERT INTO personajes (name, tipo, videojuego_name,precio_unitario) VALUES (?, ?, ?,?)";
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
-        DB basedatos = DB.getInstancia();
         
-        try(Connection conexion = basedatos.getConnection();
+        
+        try(Connection conexion = db.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);
         		) {
@@ -58,8 +58,8 @@ public class PersonajesImpl implements PersonajesDAO {
 		boolean valor = false;
         String sql = "DELETE FROM personajes WHERE name = ? ";
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
-        DB basedatos = DB.getInstancia();
-        try(Connection conexion = basedatos.getConnection();
+        
+        try(Connection conexion = db.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);) {
             sentencia.setString(1, p.getNombre());
@@ -86,7 +86,7 @@ public class PersonajesImpl implements PersonajesDAO {
         String sql = "UPDATE personajes SET tipo= ?, videojuego_name = ?,precio_unitario = ? WHERE name = ? ";
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
         DB basedatos = DB.getInstancia();
-        try(Connection conexion = basedatos.getConnection();
+        try(Connection conexion = db.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);
         		) {
@@ -118,7 +118,7 @@ public class PersonajesImpl implements PersonajesDAO {
         
         Personajes personaje_devuelto = new Personajes();      
         DB basedatos = DB.getInstancia();
-        try(Connection conexion = basedatos.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        try(Connection conexion = db.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, p.getNombre());
             ResultSet rs = sentencia.executeQuery();          
             if (rs.next()) {

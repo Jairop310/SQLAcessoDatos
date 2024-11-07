@@ -6,25 +6,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import conexion.DB;
 import dao.VideojuegoDAO;
 import modelo.Videojuego;
 
 public class VideojuegoImpl implements VideojuegoDAO {
+	DB db;
 
 	
-	
 	public VideojuegoImpl() {
-        
+        db = DB.getInstancia();
     }
 
 
 	public boolean insertar(Videojuego videojuegoNuevo) {
-		 boolean valor = false;
-	        String sql = "INSERT INTO VIDEOJUEGOS (NAME,YEAR,GENERO,precio_unitario,precio_total) VALUES(?, ?, ?, ?, ?)";
-	        DB basedatos = DB.getInstancia();
+		 	boolean valor = false;
+	        String sql = "INSERT INTO VIDEOJUEGOS (NAME,YEAR,GENERO,PRECIO_UNITARIO,PRECIO_TOTAL) VALUES(?, ?, ?, ?, ?)";
 	        
-	        try(Connection conexion = basedatos.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+	        try(Connection conexion = db.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
 	        	
 	            sentencia.setString(1, videojuegoNuevo.getName());
 	            sentencia.setInt(2, videojuegoNuevo.getYear());
@@ -49,9 +50,9 @@ public class VideojuegoImpl implements VideojuegoDAO {
     	
     	boolean valor = false;
         String sql = "DELETE FROM VIDEOJUEGOS WHERE NAME = ? ";
-        DB basedatos = DB.getInstancia();
+       
         
-        try(Connection conexion = basedatos.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        try(Connection conexion = db.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, videojuegoEiminar.getName());
             int filas = sentencia.executeUpdate();
             if (filas > 0) {
@@ -71,7 +72,7 @@ public class VideojuegoImpl implements VideojuegoDAO {
         String procedimientoSQL = "{call actualizar_valoracion_total (?) } "; 
         DB basedatos = DB.getInstancia();
         
-        try(Connection conexion = basedatos.getConnection();
+        try(Connection conexion = db.getConnection();
         		PreparedStatement  sentencia = conexion.prepareStatement(sql);
         		CallableStatement llamada = conexion.prepareCall(procedimientoSQL);) {
             sentencia.setInt(1, dep.getYear());
@@ -101,9 +102,8 @@ public class VideojuegoImpl implements VideojuegoDAO {
     	String sql = "SELECT * FROM videojuegos WHERE name =  ?";
 
         Videojuego VideogameDevuelto = new Videojuego();        
-        DB basedatos = DB.getInstancia();
         
-        try(Connection conexion = basedatos.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
+        try(Connection conexion = db.getConnection();PreparedStatement  sentencia = conexion.prepareStatement(sql);) {
             sentencia.setString(1, videojuegoConsultar.getName());
             ResultSet rs = sentencia.executeQuery();          
             if (rs.next()) {
